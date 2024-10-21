@@ -1,5 +1,5 @@
 # PRODIGY_CS_04
-# Keylogger
+# simple_Keylogger
 This is a simple keylogger implemented in Python, designed to capture keystrokes on a Windows machine using the ctypes library to interact with the Windows API (user32.dll). The keystrokes are logged in a text file (keylog.txt).
 
 Features
